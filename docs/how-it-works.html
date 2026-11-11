@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How arr-mock Works</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~68ch) with three full-width figures; the mock is the only coloured thing on the page. */
+:root{
+  --bg:#f6f8f8; --panel:#ffffff; --fg:#17201f; --mut:#5f6f6c; --line:#d6dedc;
+  --acc:#0f8a74; --acc-soft:#dff3ee; --warn:#b4680a; --warn-soft:#fdf0dc; --bad:#b63a3a; --bad-soft:#fbe4e4;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0f1617; --panel:#162021; --fg:#e4ecea; --mut:#93a5a1; --line:#2a3a3a; --acc:#3dd6b4; --acc-soft:#153832; --warn:#f0b35c; --warn-soft:#3a2c12; --bad:#ff8585; --bad-soft:#3f1d1d; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#0f1617; --panel:#162021; --fg:#e4ecea; --mut:#93a5a1; --line:#2a3a3a; --acc:#3dd6b4; --acc-soft:#153832; --warn:#f0b35c; --warn-soft:#3a2c12; --bad:#ff8585; --bad-soft:#3f1d1d; color-scheme:dark }
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+main{max-width:940px;margin:0 auto}
+h1,h2{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(28px,4.5vw,40px);font-weight:600}
+h2{font-size:22px;font-weight:600;margin-top:44px}
+p,li{max-width:68ch}
+.lead{font-size:18px;color:var(--mut);margin:10px 0 0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin:0 0 8px}
+figure{margin:18px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 10px;overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;max-width:100%;font-family:var(--body)}
+figcaption{font-size:14px;color:var(--mut);margin-top:8px;max-width:none}
+code,pre{font-family:var(--mono);font-size:13.5px}
+code{background:var(--acc-soft);color:var(--fg);padding:1px 5px;border-radius:5px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;line-height:1.5;margin:14px 0 0}
+pre code{background:none;padding:0}
+.steps{counter-reset:s;display:grid;gap:10px;margin:16px 0 0;padding:0;list-style:none;max-width:none}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.steps li::before{counter-increment:s;content:counter(s);font-family:var(--display);font-weight:600;color:var(--acc);background:var(--acc-soft);border-radius:8px;width:34px;height:34px;display:grid;place-items:center}
+.steps b{display:block}
+.steps span{color:var(--mut);font-size:14.5px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--mut);font-size:13px;letter-spacing:.03em;text-transform:uppercase;background:transparent}
+tr:first-child th{border-top:0}
+.tbl{overflow-x:auto}
+.foot{margin-top:40px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);padding-top:14px}
+a{color:var(--acc)}
+@media (prefers-reduced-motion:no-preference){ .pulse{animation:p 2.4s ease-in-out infinite} @keyframes p{0%,100%{opacity:.35}50%{opacity:1}} }
+</style>
+
+</head>
+<body>
+<main>
+  <p class="eyebrow">arr-mock · github.com/chrizantoz/arr-mock</p>
+  <h1>How arr-mock works</h1>
+  <p class="lead">A fake Sonarr, Radarr, Whisparr and Bazarr in one small Python file, so you can test an arr companion app end to end without installing the real services, finding API keys, or risking a real library.</p>
+
+  <h2>The idea in one picture</h2>
+  <figure>
+    <svg viewBox="0 0 920 400" role="img" aria-label="Your app talks HTTP to arr-mock, one process that answers as four services from an in-memory world and real files on disk; every write it receives is recorded for your test to read.">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+        <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--acc)"/></marker>
+      </defs>
+      <g font-size="13" fill="currentColor" stroke="currentColor">
+        <!-- your app -->
+        <rect x="20" y="130" width="170" height="110" rx="12" fill="var(--panel)" stroke-width="1.5"/>
+        <text x="105" y="170" text-anchor="middle" font-size="15" font-weight="600" stroke="none">Your app</text>
+        <text x="105" y="192" text-anchor="middle" fill="var(--mut)" stroke="none">the thing under test</text>
+        <text x="105" y="212" text-anchor="middle" fill="var(--mut)" stroke="none">(Auditarr, a script, anything)</text>
+        <!-- http arrows -->
+        <line x1="190" y1="170" x2="318" y2="170" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="254" y="160" text-anchor="middle" fill="var(--mut)" stroke="none">GET / POST, X-Api-Key: test</text>
+        <line x1="318" y1="205" x2="190" y2="205" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="254" y="226" text-anchor="middle" fill="var(--mut)" stroke="none">JSON, like the real thing</text>
+        <!-- mock -->
+        <rect x="320" y="40" width="300" height="300" rx="14" fill="var(--acc-soft)" stroke="var(--acc)" stroke-width="2"/>
+        <text x="470" y="68" text-anchor="middle" font-size="16" font-weight="600" fill="var(--acc)" stroke="none">arr-mock</text>
+        <text x="470" y="86" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">one Python process · port 8765</text>
+        <!-- four doors -->
+        <g stroke="var(--acc)" stroke-width="1.2" fill="var(--panel)">
+          <rect x="336" y="100" width="130" height="34" rx="8"/><rect x="474" y="100" width="130" height="34" rx="8"/>
+          <rect x="336" y="142" width="130" height="34" rx="8"/><rect x="474" y="142" width="130" height="34" rx="8"/>
+        </g>
+        <g font-family="var(--mono)" font-size="12.5" stroke="none" text-anchor="middle">
+          <text x="401" y="122">/sonarr</text><text x="539" y="122">/radarr</text><text x="401" y="164">/whisparr</text><text x="539" y="164">/bazarr</text>
+        </g>
+        <!-- world -->
+        <rect x="336" y="196" width="268" height="64" rx="8" fill="var(--panel)" stroke="var(--acc)" stroke-width="1.2"/>
+        <text x="470" y="218" text-anchor="middle" font-weight="600" stroke="none">the "world" (a Python dict)</text>
+        <text x="470" y="236" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">shows · episodes · files · movies · tags · Bazarr wanted list</text>
+        <text x="470" y="252" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">edit it in your test, the answers change</text>
+        <!-- calls ledger -->
+        <rect x="336" y="272" width="268" height="54" rx="8" fill="var(--panel)" stroke="var(--acc)" stroke-width="1.2"/>
+        <text x="470" y="293" text-anchor="middle" font-weight="600" stroke="none">srv.calls</text>
+        <text x="470" y="311" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">every POST / PUT / PATCH / DELETE it received</text>
+        <!-- disk -->
+        <rect x="700" y="130" width="200" height="110" rx="12" fill="var(--panel)" stroke-width="1.5"/>
+        <text x="800" y="166" text-anchor="middle" font-size="15" font-weight="600" stroke="none">Real files on disk</text>
+        <text x="800" y="188" text-anchor="middle" fill="var(--mut)" stroke="none">tiny MKVs made by synthlib</text>
+        <text x="800" y="208" text-anchor="middle" fill="var(--mut)" stroke="none">(ffmpeg: 30 s, 64×64, any language)</text>
+        <line x1="620" y1="185" x2="698" y2="185" stroke-width="1.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
+        <text x="659" y="175" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">exists?</text>
+        <text x="659" y="206" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="11.5">a file only "exists" for Sonarr</text>
+        <text x="659" y="220" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="11.5">when it is really there</text>
+        <!-- app probes disk directly -->
+        <path d="M105 240 C105 330, 420 372, 800 372 L800 242" fill="none" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#arr)"/>
+        <text x="455" y="392" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">your app reads, moves or fixes the files exactly as it would in production</text>
+        <!-- test reads ledger -->
+        <path d="M336 300 C250 300, 200 300, 105 300 L105 242" fill="none" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrA)"/>
+        <text x="215" y="292" text-anchor="middle" fill="var(--acc)" stroke="none" font-size="12">your test asserts on it</text>
+      </g>
+    </svg>
+    <figcaption>Your app does not know it is talking to a fake. arr-mock answers the same endpoints with the same JSON shapes, from a small in-memory world, and checks the disk so deleted or moved files behave like the real thing. Nothing is validated on writes; the point is to see what your app <em>sends</em>, and that is what your test reads back from <code>srv.calls</code> (or <code>GET /__calls</code>).</figcaption>
+  </figure>
+
+  <h2>A test run, step by step</h2>
+  <ol class="steps">
+    <li><b>Make the files.</b><span><code>synthlib.make(path, alang="fre")</code> writes a real 30-second MKV with ffmpeg: French audio, no audio, an audio delay, 10-bit, whatever the case needs.</span></li>
+    <li><b>Start the mock.</b><span><code>srv = arr_mock.start(world)</code> picks a free port and serves all four apps at once. The default world is one show with three episodes, one missing episode and one movie, matching those files.</span></li>
+    <li><b>Point your app at it.</b><span>Set its Sonarr URL to <code>http://127.0.0.1:PORT/sonarr</code>, Radarr to <code>/radarr</code>, Bazarr to <code>/bazarr</code>, API key <code>test</code>. Same for a Docker build of your app.</span></li>
+    <li><b>Let it work.</b><span>Your app lists the library, probes the files, finds the French episode, and presses whatever buttons it presses: a rescan, a search, a subtitle request.</span></li>
+    <li><b>Read what it sent.</b><span><code>srv.calls</code> holds every write with app, method, path and body. Assert the rescan went to Sonarr, the search carried the right episode id, Bazarr got the PATCH.</span></li>
+    <li><b>Turn on chaos, run again.</b><span><code>srv.chaos = arr_mock.chaos()</code> and the same run must now finish degraded, keep its data, and write nothing by accident. Set it back to <code>None</code> and the next run must be clean.</span></li>
+  </ol>
+
+  <h2>Chaos mode</h2>
+  <figure>
+    <svg viewBox="0 0 920 250" role="img" aria-label="In chaos mode each request passes a gate: most reach the fake service, eight percent get a 500, four percent are delayed, and one app drops the connection for a window of requests.">
+      <g font-size="13" fill="currentColor" stroke="currentColor">
+        <!-- incoming requests -->
+        <text x="20" y="44" font-weight="600" stroke="none">requests from your app</text>
+        <g class="pulse" stroke="none" fill="currentColor"><circle cx="28" cy="80" r="5"/><circle cx="52" cy="80" r="5"/><circle cx="76" cy="80" r="5"/><circle cx="100" cy="80" r="5"/><circle cx="124" cy="80" r="5"/><circle cx="148" cy="80" r="5"/><circle cx="172" cy="80" r="5"/></g>
+        <line x1="190" y1="80" x2="280" y2="80" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- gate -->
+        <rect x="282" y="30" width="150" height="100" rx="12" fill="var(--acc-soft)" stroke="var(--acc)" stroke-width="2"/>
+        <text x="357" y="66" text-anchor="middle" font-weight="600" fill="var(--acc)" stroke="none">chaos gate</text>
+        <text x="357" y="86" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">seeded random</text>
+        <text x="357" y="104" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">same run every time</text>
+        <!-- outcomes -->
+        <line x1="432" y1="60" x2="540" y2="42" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="432" y1="80" x2="540" y2="100" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="432" y1="100" x2="540" y2="158" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="432" y1="115" x2="540" y2="216" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="544" y="22" width="356" height="40" rx="8" fill="var(--panel)" stroke-width="1.2"/>
+        <text x="560" y="47" stroke="none"><tspan font-weight="600">88 %</tspan> normal answer from the fake service</text>
+        <rect x="544" y="80" width="356" height="40" rx="8" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.2"/>
+        <text x="560" y="105" stroke="none"><tspan font-weight="600" fill="var(--bad)">8 %</tspan> HTTP 500 <tspan fill="var(--mut)">{"error": "chaos"}</tspan></text>
+        <rect x="544" y="138" width="356" height="40" rx="8" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.2"/>
+        <text x="560" y="163" stroke="none"><tspan font-weight="600" fill="var(--warn)">4 %</tspan> answered after a 2 s sleep</text>
+        <rect x="544" y="196" width="356" height="40" rx="8" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.2"/>
+        <text x="560" y="221" stroke="none"><tspan font-weight="600" fill="var(--bad)">radarr, requests 2–13</tspan> connection dropped, no reply</text>
+        <text x="20" y="170" font-weight="600" stroke="none">what your app must do</text>
+        <text x="20" y="192" fill="var(--mut)" stroke="none">finish the run, mark Radarr as unreachable,</text>
+        <text x="20" y="210" fill="var(--mut)" stroke="none">keep the findings it already had for Radarr,</text>
+        <text x="20" y="228" fill="var(--mut)" stroke="none">send no half-done write, recover next run.</text>
+      </g>
+    </svg>
+    <figcaption><code>arr_mock.chaos(seed=11, p500=0.08, pslow=0.04, slow_s=2, vanish_app="radarr", vanish_from=2, vanish_len=12)</code>. Every knob is an argument, and the seed makes a failing run reproducible. Flip it on and off mid-test by assigning <code>srv.chaos</code>.</figcaption>
+  </figure>
+
+  <h2>The whole thing in code</h2>
+<pre><code>import arr_mock, synthlib
+
+W = arr_mock.default_world("/data/tv", "/data/movies")    # one show, three files, one missing episode, one movie
+synthlib.make(W["files"][1]["path"], alang="fre")         # S01E02 really is French now
+srv = arr_mock.start(W)                                   # http://127.0.0.1:&lt;port&gt;/sonarr … API key "test"
+
+run_my_app(sonarr=f"http://127.0.0.1:{srv.server_address[1]}/sonarr", key="test")
+
+writes = [c for c in srv.calls if c["method"] != "GET"]
+assert any(c["body"].get("name") == "EpisodeSearch" for c in writes)   # it asked Sonarr to look for a better copy
+
+srv.chaos = arr_mock.chaos()                              # now break things
+run_my_app(...)                                           # must finish degraded, write nothing
+srv.chaos = None</code></pre>
+
+  <h2>What it answers</h2>
+  <div class="tbl"><table>
+    <tr><th>app</th><th>endpoints</th></tr>
+    <tr><td>Sonarr, Whisparr</td><td><code>series</code>, <code>series/{id}</code>, <code>episode?seriesId=</code>, <code>episodefile?seriesId=</code>, <code>episodefile/{id}</code>, <code>series/editor</code>, <code>tag</code>, <code>rootfolder</code>, <code>system/status</code>, <code>command</code>, <code>queue</code>, <code>history</code>, <code>blocklist</code>, <code>notification</code></td></tr>
+    <tr><td>Radarr</td><td><code>movie</code>, <code>movie/{id}</code>, <code>moviefile?movieId=</code>, <code>moviefile/{id}</code>, <code>movie/editor</code>, plus the shared ones above</td></tr>
+    <tr><td>Bazarr</td><td><code>episodes/wanted</code>, <code>movies/wanted</code>, <code>episodes</code>, <code>episodes/history</code>, <code>movies/history</code>, <code>subtitles</code> (PATCH search), <code>providers/*</code>, <code>system/status</code></td></tr>
+    <tr><td>control</td><td><code>GET /__calls</code> lists the recorded writes, <code>POST /__reset</code> clears them</td></tr>
+  </table></div>
+  <p style="margin-top:14px;color:var(--mut)">It is deliberately shallow. Writes are accepted and recorded, never validated, and there is no search, no download client and no quality logic. If your app needs an endpoint that is missing, it is usually a three-line addition.</p>
+
+  <p class="foot">arr-mock was born inside <a href="https://github.com/chrizantoz/auditarr" target="_blank" rel="noopener">Auditarr</a>, where it runs the end-to-end and chaos tests in CI. Source and README: <a href="https://github.com/chrizantoz/arr-mock" target="_blank" rel="noopener">github.com/chrizantoz/arr-mock</a>. GPL-3.0.</p>
+</main>
+</body>
+</html>

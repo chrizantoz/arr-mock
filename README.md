@@ -4,6 +4,14 @@ A fake **Sonarr, Radarr, Whisparr and Bazarr** in one small Python file. No Dock
 
 Born inside [Auditarr](https://github.com/chrizantoz/auditarr), where it runs the end-to-end and chaos tests in CI. Published on its own so other arr companion apps can use it too.
 
+## 🧭 How it works
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/how-it-works-1-dark.svg"><img src="docs/how-it-works-1.svg" alt="Your app talks HTTP to arr-mock, one process that answers as four services from an in-memory world and real files on disk; every write it receives is recorded for your test to read." width="100%"></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/how-it-works-2-dark.svg"><img src="docs/how-it-works-2.svg" alt="Chaos mode: each request passes a gate; most reach the fake service, some get a 500, some are delayed, and one app drops the connection for a window of requests." width="100%"></picture>
+
+A longer walkthrough with the test run step by step: open `docs/how-it-works.html` in a browser.
+
 ## 🚀 Start it
 
 ```bash

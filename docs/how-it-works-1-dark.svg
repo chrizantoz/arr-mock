@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#162021" viewBox="0 0 920 400" role="img" aria-label="Your app talks HTTP to arr-mock, one process that answers as four services from an in-memory world and real files on disk; every write it receives is recorded for your test to read."><rect width="100%" height="100%" rx="12" fill="#162021"/>
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#e4ecea"/></marker>
+        <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#3dd6b4"/></marker>
+      </defs>
+      <g font-size="13" fill="#e4ecea" stroke="#e4ecea">
+        <!-- your app -->
+        <rect x="20" y="130" width="170" height="110" rx="12" fill="#162021" stroke-width="1.5"/>
+        <text x="105" y="170" text-anchor="middle" font-size="15" font-weight="600" stroke="none">Your app</text>
+        <text x="105" y="192" text-anchor="middle" fill="#93a5a1" stroke="none">the thing under test</text>
+        <text x="105" y="212" text-anchor="middle" fill="#93a5a1" stroke="none">(Auditarr, a script, anything)</text>
+        <!-- http arrows -->
+        <line x1="190" y1="170" x2="318" y2="170" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="254" y="160" text-anchor="middle" fill="#93a5a1" stroke="none">GET / POST, X-Api-Key: test</text>
+        <line x1="318" y1="205" x2="190" y2="205" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="254" y="226" text-anchor="middle" fill="#93a5a1" stroke="none">JSON, like the real thing</text>
+        <!-- mock -->
+        <rect x="320" y="40" width="300" height="300" rx="14" fill="#153832" stroke="#3dd6b4" stroke-width="2"/>
+        <text x="470" y="68" text-anchor="middle" font-size="16" font-weight="600" fill="#3dd6b4" stroke="none">arr-mock</text>
+        <text x="470" y="86" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="12">one Python process · port 8765</text>
+        <!-- four doors -->
+        <g stroke="#3dd6b4" stroke-width="1.2" fill="#162021">
+          <rect x="336" y="100" width="130" height="34" rx="8"/><rect x="474" y="100" width="130" height="34" rx="8"/>
+          <rect x="336" y="142" width="130" height="34" rx="8"/><rect x="474" y="142" width="130" height="34" rx="8"/>
+        </g>
+        <g font-family="JetBrains Mono,ui-monospace,Menlo,monospace" font-size="12.5" stroke="none" text-anchor="middle">
+          <text x="401" y="122">/sonarr</text><text x="539" y="122">/radarr</text><text x="401" y="164">/whisparr</text><text x="539" y="164">/bazarr</text>
+        </g>
+        <!-- world -->
+        <rect x="336" y="196" width="268" height="64" rx="8" fill="#162021" stroke="#3dd6b4" stroke-width="1.2"/>
+        <text x="470" y="218" text-anchor="middle" font-weight="600" stroke="none">the "world" (a Python dict)</text>
+        <text x="470" y="236" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="12">shows · episodes · files · movies · tags · Bazarr wanted list</text>
+        <text x="470" y="252" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="12">edit it in your test, the answers change</text>
+        <!-- calls ledger -->
+        <rect x="336" y="272" width="268" height="54" rx="8" fill="#162021" stroke="#3dd6b4" stroke-width="1.2"/>
+        <text x="470" y="293" text-anchor="middle" font-weight="600" stroke="none">srv.calls</text>
+        <text x="470" y="311" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="12">every POST / PUT / PATCH / DELETE it received</text>
+        <!-- disk -->
+        <rect x="700" y="130" width="200" height="110" rx="12" fill="#162021" stroke-width="1.5"/>
+        <text x="800" y="166" text-anchor="middle" font-size="15" font-weight="600" stroke="none">Real files on disk</text>
+        <text x="800" y="188" text-anchor="middle" fill="#93a5a1" stroke="none">tiny MKVs made by synthlib</text>
+        <text x="800" y="208" text-anchor="middle" fill="#93a5a1" stroke="none">(ffmpeg: 30 s, 64×64, any language)</text>
+        <line x1="620" y1="185" x2="698" y2="185" stroke-width="1.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
+        <text x="659" y="175" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="12">exists?</text>
+        <text x="659" y="206" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="11.5">a file only "exists" for Sonarr</text>
+        <text x="659" y="220" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="11.5">when it is really there</text>
+        <!-- app probes disk directly -->
+        <path d="M105 240 C105 330, 420 372, 800 372 L800 242" fill="none" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#arr)"/>
+        <text x="455" y="392" text-anchor="middle" fill="#93a5a1" stroke="none" font-size="12">your app reads, moves or fixes the files exactly as it would in production</text>
+        <!-- test reads ledger -->
+        <path d="M336 300 C250 300, 200 300, 105 300 L105 242" fill="none" stroke="#3dd6b4" stroke-width="1.5" marker-end="url(#arrA)"/>
+        <text x="215" y="292" text-anchor="middle" fill="#3dd6b4" stroke="none" font-size="12">your test asserts on it</text>
+      </g>
+    </svg>
