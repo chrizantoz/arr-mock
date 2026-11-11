@@ -23,7 +23,7 @@ p,li{max-width:68ch}
 .lead{font-size:18px;color:var(--mut);margin:10px 0 0}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin:0 0 8px}
 figure{margin:18px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 14px 10px;overflow-x:auto}
-figure svg{display:block;width:100%;height:auto;max-width:100%;font-family:var(--body)}
+figure svg{display:block;width:100%;height:auto;max-width:100%;min-width:720px;font-family:var(--body)}
 figcaption{font-size:14px;color:var(--mut);margin-top:8px;max-width:none}
 code,pre{font-family:var(--mono);font-size:13.5px}
 code{background:var(--acc-soft);color:var(--fg);padding:1px 5px;border-radius:5px}
@@ -53,58 +53,44 @@ a{color:var(--acc)}
 
   <h2>The idea in one picture</h2>
   <figure>
-    <svg viewBox="0 0 920 400" role="img" aria-label="Your app talks HTTP to arr-mock, one process that answers as four services from an in-memory world and real files on disk; every write it receives is recorded for your test to read.">
+    <svg viewBox="0 0 1400 800" role="img" aria-label="Your app talks HTTP to arr-mock, one process that answers as four services from an in-memory world and real files on disk; every write it receives is recorded for your test to read.">
       <defs>
-        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
-        <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--acc)"/></marker>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+        <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--acc)"/></marker>
       </defs>
-      <g font-size="13" fill="currentColor" stroke="currentColor">
-        <!-- your app -->
-        <rect x="20" y="130" width="170" height="110" rx="12" fill="var(--panel)" stroke-width="1.5"/>
-        <text x="105" y="170" text-anchor="middle" font-size="15" font-weight="600" stroke="none">Your app</text>
-        <text x="105" y="192" text-anchor="middle" fill="var(--mut)" stroke="none">the thing under test</text>
-        <text x="105" y="212" text-anchor="middle" fill="var(--mut)" stroke="none">(Auditarr, a script, anything)</text>
-        <!-- http arrows -->
-        <line x1="190" y1="170" x2="318" y2="170" stroke-width="1.5" marker-end="url(#arr)"/>
-        <text x="254" y="160" text-anchor="middle" fill="var(--mut)" stroke="none">GET / POST, X-Api-Key: test</text>
-        <line x1="318" y1="205" x2="190" y2="205" stroke-width="1.5" marker-end="url(#arr)"/>
-        <text x="254" y="226" text-anchor="middle" fill="var(--mut)" stroke="none">JSON, like the real thing</text>
-        <!-- mock -->
-        <rect x="320" y="40" width="300" height="300" rx="14" fill="var(--acc-soft)" stroke="var(--acc)" stroke-width="2"/>
-        <text x="470" y="68" text-anchor="middle" font-size="16" font-weight="600" fill="var(--acc)" stroke="none">arr-mock</text>
-        <text x="470" y="86" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">one Python process · port 8765</text>
-        <!-- four doors -->
-        <g stroke="var(--acc)" stroke-width="1.2" fill="var(--panel)">
-          <rect x="336" y="100" width="130" height="34" rx="8"/><rect x="474" y="100" width="130" height="34" rx="8"/>
-          <rect x="336" y="142" width="130" height="34" rx="8"/><rect x="474" y="142" width="130" height="34" rx="8"/>
-        </g>
-        <g font-family="var(--mono)" font-size="12.5" stroke="none" text-anchor="middle">
-          <text x="401" y="122">/sonarr</text><text x="539" y="122">/radarr</text><text x="401" y="164">/whisparr</text><text x="539" y="164">/bazarr</text>
-        </g>
-        <!-- world -->
-        <rect x="336" y="196" width="268" height="64" rx="8" fill="var(--panel)" stroke="var(--acc)" stroke-width="1.2"/>
-        <text x="470" y="218" text-anchor="middle" font-weight="600" stroke="none">the "world" (a Python dict)</text>
-        <text x="470" y="236" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">shows · episodes · files · movies · tags · Bazarr wanted list</text>
-        <text x="470" y="252" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">edit it in your test, the answers change</text>
-        <!-- calls ledger -->
-        <rect x="336" y="272" width="268" height="54" rx="8" fill="var(--panel)" stroke="var(--acc)" stroke-width="1.2"/>
-        <text x="470" y="293" text-anchor="middle" font-weight="600" stroke="none">srv.calls</text>
-        <text x="470" y="311" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">every POST / PUT / PATCH / DELETE it received</text>
-        <!-- disk -->
-        <rect x="700" y="130" width="200" height="110" rx="12" fill="var(--panel)" stroke-width="1.5"/>
-        <text x="800" y="166" text-anchor="middle" font-size="15" font-weight="600" stroke="none">Real files on disk</text>
-        <text x="800" y="188" text-anchor="middle" fill="var(--mut)" stroke="none">tiny MKVs made by synthlib</text>
-        <text x="800" y="208" text-anchor="middle" fill="var(--mut)" stroke="none">(ffmpeg: 30 s, 64×64, any language)</text>
-        <line x1="620" y1="185" x2="698" y2="185" stroke-width="1.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
-        <text x="659" y="175" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">exists?</text>
-        <text x="659" y="206" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="11.5">a file only "exists" for Sonarr</text>
-        <text x="659" y="220" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="11.5">when it is really there</text>
-        <!-- app probes disk directly -->
-        <path d="M105 240 C105 330, 420 372, 800 372 L800 242" fill="none" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#arr)"/>
-        <text x="455" y="392" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">your app reads, moves or fixes the files exactly as it would in production</text>
-        <!-- test reads ledger -->
-        <path d="M336 300 C250 300, 200 300, 105 300 L105 242" fill="none" stroke="var(--acc)" stroke-width="1.5" marker-end="url(#arrA)"/>
-        <text x="215" y="292" text-anchor="middle" fill="var(--acc)" stroke="none" font-size="12">your test asserts on it</text>
+      <g font-size="16" fill="currentColor" stroke="currentColor">
+        <rect x="40" y="230" width="280" height="170" rx="14" fill="var(--panel)" stroke-width="1.6"/>
+        <text x="180" y="290" text-anchor="middle" font-size="24" font-weight="600" stroke="none">Your app</text>
+        <text x="180" y="326" text-anchor="middle" fill="var(--mut)" stroke="none">the thing under test</text>
+        <text x="180" y="354" text-anchor="middle" fill="var(--mut)" stroke="none">Auditarr, a script, anything</text>
+        <line x1="320" y1="280" x2="538" y2="280" stroke-width="1.6" marker-end="url(#arr)"/>
+        <text x="430" y="258" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">GET / POST · key: test</text>
+        <line x1="538" y1="350" x2="320" y2="350" stroke-width="1.6" marker-end="url(#arr)"/>
+        <text x="430" y="384" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">JSON, like the real thing</text>
+        <rect x="540" y="60" width="460" height="620" rx="18" fill="var(--acc-soft)" stroke="var(--acc)" stroke-width="2.2"/>
+        <text x="770" y="108" text-anchor="middle" font-size="26" font-weight="600" fill="var(--acc)" stroke="none">arr-mock</text>
+        <text x="770" y="136" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">one Python process · port 8765</text>
+        <g stroke="var(--acc)" stroke-width="1.4" fill="var(--panel)"><rect x="566" y="166" width="196" height="60" rx="10"/><rect x="778" y="166" width="196" height="60" rx="10"/><rect x="566" y="242" width="196" height="60" rx="10"/><rect x="778" y="242" width="196" height="60" rx="10"/></g>
+        <g font-family="var(--mono)" font-size="18" stroke="none" text-anchor="middle"><text x="664" y="203">/sonarr</text><text x="876" y="203">/radarr</text><text x="664" y="279">/whisparr</text><text x="876" y="279">/bazarr</text></g>
+        <rect x="566" y="332" width="408" height="130" rx="12" fill="var(--panel)" stroke="var(--acc)" stroke-width="1.4"/>
+        <text x="770" y="372" text-anchor="middle" font-size="20" font-weight="600" stroke="none">the "world", a Python dict</text>
+        <text x="770" y="404" text-anchor="middle" fill="var(--mut)" stroke="none">shows · episodes · files · movies · tags · wanted list</text>
+        <text x="770" y="434" text-anchor="middle" fill="var(--mut)" stroke="none">edit it in your test and the answers change</text>
+        <rect x="566" y="492" width="408" height="110" rx="12" fill="var(--panel)" stroke="var(--acc)" stroke-width="1.4"/>
+        <text x="770" y="532" text-anchor="middle" font-size="20" font-weight="600" stroke="none" font-family="var(--mono)">srv.calls</text>
+        <text x="770" y="564" text-anchor="middle" fill="var(--mut)" stroke="none">every POST, PUT, PATCH and DELETE it received</text>
+        <rect x="1080" y="230" width="280" height="170" rx="14" fill="var(--panel)" stroke-width="1.6"/>
+        <text x="1220" y="290" text-anchor="middle" font-size="22" font-weight="600" stroke="none">Real files on disk</text>
+        <text x="1220" y="326" text-anchor="middle" fill="var(--mut)" stroke="none">tiny MKVs made by synthlib</text>
+        <text x="1220" y="354" text-anchor="middle" fill="var(--mut)" stroke="none">ffmpeg · 30 s · any language</text>
+        <line x1="1000" y1="300" x2="1078" y2="300" stroke-width="1.6" marker-end="url(#arr)" marker-start="url(#arr)"/>
+        <text x="1039" y="276" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">exists?</text>
+        <text x="1180" y="440" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">a file only exists for Sonarr</text>
+        <text x="1180" y="464" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">when it is really there</text>
+        <path d="M180 400 C180 720, 700 740, 1300 740 L1300 402" fill="none" stroke-width="1.6" stroke-dasharray="7 7" marker-end="url(#arr)"/>
+        <text x="700" y="776" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="16">your app reads, moves or fixes the files exactly as it would in production</text>
+        <path d="M566 548 C440 548, 300 560, 180 560 L180 402" fill="none" stroke="var(--acc)" stroke-width="1.8" marker-end="url(#arrA)"/>
+        <text x="380" y="536" text-anchor="middle" fill="var(--acc)" stroke="none" font-size="16" font-weight="600">your test asserts on it</text>
       </g>
     </svg>
     <figcaption>Your app does not know it is talking to a fake. arr-mock answers the same endpoints with the same JSON shapes, from a small in-memory world, and checks the disk so deleted or moved files behave like the real thing. Nothing is validated on writes; the point is to see what your app <em>sends</em>, and that is what your test reads back from <code>srv.calls</code> (or <code>GET /__calls</code>).</figcaption>
@@ -122,34 +108,28 @@ a{color:var(--acc)}
 
   <h2>Chaos mode</h2>
   <figure>
-    <svg viewBox="0 0 920 250" role="img" aria-label="In chaos mode each request passes a gate: most reach the fake service, eight percent get a 500, four percent are delayed, and one app drops the connection for a window of requests.">
-      <g font-size="13" fill="currentColor" stroke="currentColor">
-        <!-- incoming requests -->
-        <text x="20" y="44" font-weight="600" stroke="none">requests from your app</text>
-        <g class="pulse" stroke="none" fill="currentColor"><circle cx="28" cy="80" r="5"/><circle cx="52" cy="80" r="5"/><circle cx="76" cy="80" r="5"/><circle cx="100" cy="80" r="5"/><circle cx="124" cy="80" r="5"/><circle cx="148" cy="80" r="5"/><circle cx="172" cy="80" r="5"/></g>
-        <line x1="190" y1="80" x2="280" y2="80" stroke-width="1.5" marker-end="url(#arr)"/>
-        <!-- gate -->
-        <rect x="282" y="30" width="150" height="100" rx="12" fill="var(--acc-soft)" stroke="var(--acc)" stroke-width="2"/>
-        <text x="357" y="66" text-anchor="middle" font-weight="600" fill="var(--acc)" stroke="none">chaos gate</text>
-        <text x="357" y="86" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">seeded random</text>
-        <text x="357" y="104" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="12">same run every time</text>
-        <!-- outcomes -->
-        <line x1="432" y1="60" x2="540" y2="42" stroke-width="1.5" marker-end="url(#arr)"/>
-        <line x1="432" y1="80" x2="540" y2="100" stroke-width="1.5" marker-end="url(#arr)"/>
-        <line x1="432" y1="100" x2="540" y2="158" stroke-width="1.5" marker-end="url(#arr)"/>
-        <line x1="432" y1="115" x2="540" y2="216" stroke-width="1.5" marker-end="url(#arr)"/>
-        <rect x="544" y="22" width="356" height="40" rx="8" fill="var(--panel)" stroke-width="1.2"/>
-        <text x="560" y="47" stroke="none"><tspan font-weight="600">88 %</tspan> normal answer from the fake service</text>
-        <rect x="544" y="80" width="356" height="40" rx="8" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.2"/>
-        <text x="560" y="105" stroke="none"><tspan font-weight="600" fill="var(--bad)">8 %</tspan> HTTP 500 <tspan fill="var(--mut)">{"error": "chaos"}</tspan></text>
-        <rect x="544" y="138" width="356" height="40" rx="8" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.2"/>
-        <text x="560" y="163" stroke="none"><tspan font-weight="600" fill="var(--warn)">4 %</tspan> answered after a 2 s sleep</text>
-        <rect x="544" y="196" width="356" height="40" rx="8" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.2"/>
-        <text x="560" y="221" stroke="none"><tspan font-weight="600" fill="var(--bad)">radarr, requests 2–13</tspan> connection dropped, no reply</text>
-        <text x="20" y="170" font-weight="600" stroke="none">what your app must do</text>
-        <text x="20" y="192" fill="var(--mut)" stroke="none">finish the run, mark Radarr as unreachable,</text>
-        <text x="20" y="210" fill="var(--mut)" stroke="none">keep the findings it already had for Radarr,</text>
-        <text x="20" y="228" fill="var(--mut)" stroke="none">send no half-done write, recover next run.</text>
+    <svg viewBox="0 0 1400 520" role="img" aria-label="In chaos mode each request passes a gate: most reach the fake service, eight percent get a 500, four percent are delayed, and one app drops the connection for a window of requests.">
+      <g font-size="16" fill="currentColor" stroke="currentColor">
+        <text x="40" y="70" font-size="20" font-weight="600" stroke="none">Requests from your app</text>
+        <g stroke="none" fill="currentColor"><circle cx="52" cy="126" r="8"/><circle cx="88" cy="126" r="8"/><circle cx="124" cy="126" r="8"/><circle cx="160" cy="126" r="8"/><circle cx="196" cy="126" r="8"/><circle cx="232" cy="126" r="8"/><circle cx="268" cy="126" r="8"/></g>
+        <line x1="290" y1="126" x2="418" y2="126" stroke-width="1.6" marker-end="url(#arr)"/>
+        <rect x="420" y="56" width="240" height="140" rx="16" fill="var(--acc-soft)" stroke="var(--acc)" stroke-width="2.2"/>
+        <text x="540" y="112" text-anchor="middle" font-size="22" font-weight="600" fill="var(--acc)" stroke="none">chaos gate</text>
+        <text x="540" y="144" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">seeded random</text>
+        <text x="540" y="168" text-anchor="middle" fill="var(--mut)" stroke="none" font-size="15">same run every time</text>
+        <g stroke-width="1.6"><line x1="660" y1="96" x2="758" y2="70" marker-end="url(#arr)"/><line x1="660" y1="118" x2="758" y2="170" marker-end="url(#arr)"/><line x1="660" y1="140" x2="758" y2="270" marker-end="url(#arr)"/><line x1="660" y1="162" x2="758" y2="370" marker-end="url(#arr)"/></g>
+        <rect x="760" y="36" width="600" height="68" rx="12" fill="var(--panel)" stroke-width="1.4"/>
+        <text x="784" y="78" stroke="none" font-size="18"><tspan font-weight="600">88 %</tspan>  normal answer from the fake service</text>
+        <rect x="760" y="136" width="600" height="68" rx="12" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.4"/>
+        <text x="784" y="178" stroke="none" font-size="18"><tspan font-weight="600" fill="var(--bad)">8 %</tspan>  HTTP 500 with <tspan font-family="var(--mono)" font-size="16">{"error": "chaos"}</tspan></text>
+        <rect x="760" y="236" width="600" height="68" rx="12" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.4"/>
+        <text x="784" y="278" stroke="none" font-size="18"><tspan font-weight="600" fill="var(--warn)">4 %</tspan>  answered after a 2-second sleep</text>
+        <rect x="760" y="336" width="600" height="68" rx="12" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.4"/>
+        <text x="784" y="378" stroke="none" font-size="18"><tspan font-weight="600" fill="var(--bad)">Radarr, requests 2 to 13</tspan>  connection dropped, no reply</text>
+        <text x="40" y="300" font-size="20" font-weight="600" stroke="none">What your app must do</text>
+        <text x="40" y="336" fill="var(--mut)" stroke="none">finish the run and mark Radarr as unreachable</text>
+        <text x="40" y="366" fill="var(--mut)" stroke="none">keep the findings it already had for Radarr</text>
+        <text x="40" y="396" fill="var(--mut)" stroke="none">send no half-done write, recover on the next run</text>
       </g>
     </svg>
     <figcaption><code>arr_mock.chaos(seed=11, p500=0.08, pslow=0.04, slow_s=2, vanish_app="radarr", vanish_from=2, vanish_len=12)</code>. Every knob is an argument, and the seed makes a failing run reproducible. Flip it on and off mid-test by assigning <code>srv.chaos</code>.</figcaption>
